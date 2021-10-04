@@ -425,6 +425,33 @@ export interface CreateClientGrant {
     scope: string[];
 }
 
+export interface DeviceCredential {
+    id?: string | undefined;
+    device_name?: string | undefined;
+    device_id?: string | undefined;
+    type?: string | undefined;
+    user_id?: string | undefined;
+    client_id?: string | undefined;
+}
+
+export interface GetDeviceCredentialsData {
+    page?: number | undefined;
+    per_page?: number | undefined;
+    fields?: string | undefined;
+    include_fields?: boolean | undefined;
+    user_id: string;
+    client_id?: string | undefined;
+    type: 'public_key' | 'refresh_token' | 'rotating_refresh_token';
+}
+
+export interface GetDeviceCredentialsDataPaged extends GetDeviceCredentialsData {
+    include_totals?: boolean | undefined;
+}
+
+export interface DeviceCredentialPage extends Page {
+    device_credentials: DeviceCredential[];
+}
+
 export type Strategy =
     | 'ad'
     | 'adfs'
@@ -1461,14 +1488,19 @@ export class ManagementClient<A = AppMetadata, U = UserMetadata> {
     deleteClientGrant(params: ObjectWithId, cb: (err: Error) => void): void;
 
     // Device Keys
-    getDeviceCredentials(): Promise<User<A, U>>;
-    getDeviceCredentials(cb: (err: Error, data: any) => void): void;
+    getDeviceCredentials(params: GetDeviceCredentialsData): Promise<DeviceCredential[]>;
+    getDeviceCredentials(params: GetDeviceCredentialsData, cb: (err: Error, data: DeviceCredential[]) => void): void;
+    getDeviceCredentials(params: GetDeviceCredentialsDataPaged): Promise<DeviceCredentialPage>;
+    getDeviceCredentials(
+        params: GetDeviceCredentialsDataPaged,
+        cb: (err: Error, data: DeviceCredentialPage) => void,
+    ): void;
 
     createDevicePublicKey(data: Data): Promise<User<A, U>>;
     createDevicePublicKey(data: Data, cb: (err: Error, data: any) => void): void;
 
-    deleteDeviceCredential(params: ClientParams): Promise<User<A, U>>;
-    deleteDeviceCredential(params: ClientParams, cb: (err: Error, data: any) => void): void;
+    deleteDeviceCredential(params: ObjectWithId): Promise<void>;
+    deleteDeviceCredential(params: ObjectWithId, cb: (err: Error) => void): void;
 
     // Roles
     getRoles(): Promise<Role[]>;

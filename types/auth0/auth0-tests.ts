@@ -595,6 +595,18 @@ management.sendEmailVerification(
     (err, data) => console.log(data),
 );
 
+// Device Credentials
+management
+    .getDeviceCredentials({ user_id: 'user_id', type: 'refresh_token' })
+    .then(deviceCredenticals => console.log(deviceCredenticals));
+management.getDeviceCredentials({ user_id: 'user_id', type: 'refresh_token' }, (err, data) => console.log(data));
+management
+    .getDeviceCredentials({ user_id: 'user_id', type: 'refresh_token', include_totals: true })
+    .then(deviceCredenticalsPage => console.log(deviceCredenticalsPage));
+management.getDeviceCredentials({ user_id: 'user_id', type: 'refresh_token', include_totals: true }, (err, data) =>
+    console.log(data),
+);
+
 // Roles
 management.getRoles().then(roles => console.log(roles));
 management.getRoles((err, data) => console.log(data));
